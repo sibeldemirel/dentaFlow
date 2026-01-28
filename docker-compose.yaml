@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # --- BACKEND : FastAPI ---
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dentaflow_api
+    restart: always
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/dentaflow_db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    # A enlever pour la prod
+    ports: ["8000:8000"]
+
+  # --- FRONTEND : Vue.js (Vite + Tailwind) ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dentaflow_ui
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - app_network
+
+  # --- BASE DE DONNÉES : PostgreSQL ---
+  db:
+    image: postgres:15-alpine
+    container_name: dentaflow_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dentaflow_secure_pass}
+      POSTGRES_DB: dentaflow_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-admin} -d dentaflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  # --- CACHE & MESSAGERIE : Redis ---
+  redis:
+    image: redis:7-alpine
+    container_name: dentaflow_cache
+    networks:
+      - app_network
+
+# --- RÉSEAUX ---
+networks:
+  app_network:
+    driver: bridge
+
+# --- VOLUMES ---
+volumes:
+  postgres_data:

@@ -1,77 +1,153 @@
-DentaFlow - Système d'Information pour Laboratoire Dentaire
+# DentaFlow — Système d'Information pour Laboratoire Dentaire
 
-Qu'est-ce que DentaFlow ?
-DentaFlow est une solution SaaS de gestion de production prothétique dentaire conçue pour l'ère numérique. Elle assure la transition entre les empreintes physiques et les flux CAO/FAO tout en garantissant une sécurité maximale pour les données de santé.
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)](#)
+[![Snyk](https://img.shields.io/badge/Security-Snyk-red)](#)
+[![SonarCloud](https://img.shields.io/badge/Quality-SonarCloud-yellow)](#)
+[![License](https://img.shields.io/badge/License-MIT-green)](#)
 
-Fonctionnalités Clés
-- Gestion Multi-flux : Réception des empreintes silicones et scans intra-oraux (STL/OBJ).
-- Traçabilité Totale : Suivi des travaux par QR Code à chaque étape de l'usinage.
-- Portail Praticien : Espace sécurisé pour les chirurgiens-dentistes avec visionneuse 3D intégrée.
-- Logistique & Facturation : Génération de devis aux normes CCAM et gestion des stocks de résines/poudres.
+Résumé
+---
+DentaFlow est une solution SaaS de gestion de production prothétique dentaire conçue pour l'ère numérique. Elle assure la transition entre les empreintes physiques et les flux CAO/FAO tout en garantissant traçabilité, conformité et intégration d'une visionneuse 3D pour les praticiens.
 
-Stack Technique
-- Frontend : Vue.js (Vite, Tailwind CSS, Three.js pour la 3D).
-  - Version :
-    - Vue.js 3 : 
-    - Tailwind CSS :
-    - Three.js : 
-- Backend : FastAPI (Python), asynchrone et performant.
-  - Version : Python 3.11
-- Base de données : PostgreSQL 15 (avec support JSONB pour les prescriptions).
-- Infrastructure : Docker & Docker Compose, prêt pour un déploiement certifié HDS.
-- DevSecOps : CI/CD via GitHub Actions avec scans Snyk et SonarCloud.
+Table des matières
+---
+- [Fonctionnalités clés](#fonctionnalit%C3%A9s-cl%C3%A9s)
+- [Stack technique](#stack-technique)
+- [Conformité & Sécurité](#conformit%C3%A9--s%C3%A9curit%C3%A9)
+- [Installation (Développement)](#installation-d%C3%A9veloppement)
+- [Lancement rapide](#lancement-rapide)
+- [Pipeline CI/CD](#pipeline-cicd)
+- [Structure du projet](#structure-du-projet)
+- [Contribuer](#contribuer)
+- [Contact / Auteur](#contact--auteur)
+- [Licence](#licence)
 
-Conformité et Sécurité (Privacy by Design)
-DentaFlow intègre la protection des données dès sa conception :
-- Données de Santé : Hébergement compatible HDS (Hébergeur de Données de Santé).
-- Pseudonymisation : Utilisation systématique d'UUID v4 pour l'identification des dossiers patients.
-- Chiffrement : Données chiffrées au repos (AES-256) et en transit (TLS 1.3).
-- Contrôle d'accès : Authentification forte (MFA) et gestion des rôles (RBAC).
+Fonctionnalités clés
+---
+- Gestion multi-flux : réception et traitement d'empreintes silicones et scans intra-oraux (formats STL/OBJ).
+- Traçabilité totale : suivi des travaux par QR Code à chaque étape de l'usinage.
+- Portail praticien : espace sécurisé pour chirurgiens-dentistes avec visionneuse 3D intégrée (visualisation STL/OBJ).
+- Logistique & facturation : génération de devis conformes aux normes CCAM, gestion des stocks (résines, poudres).
+- Audit & historique : historique complet des modifications, états et interventions.
+- API REST asynchrone pour intégration tiers.
+
+Stack technique
+---
+- Frontend
+  - Framework : Vue.js 3 (Vite)
+  - Styles : Tailwind CSS
+  - 3D : Three.js (visionneuse STL/OBJ)
+  - Tests : Vitest
+- Backend
+  - Framework : FastAPI (Python, asynchrone)
+  - Python : 3.11
+  - Tests : Pytest
+- Base de données : PostgreSQL 15 (JSONB pour prescriptions et métadonnées)
+- Conteneurisation : Docker & Docker Compose
+- Sécurité / DevSecOps : GitHub Actions, Snyk, SonarCloud
+
+Versions (exemples)
+---
+- Vue.js 3.x
+- Tailwind CSS 3.x
+- Three.js r14xx (remplacer par la version exacte)
+- Python 3.11
+- PostgreSQL 15
+
+Conformité & sécurité (Privacy by Design)
+---
+DentaFlow intègre la protection des données dès la conception :
+- Données de santé : Hébergement compatible HDS (Hébergeur de Données de Santé).
+- Pseudonymisation : utilisation systématique d'UUID v4 pour l'identification des dossiers patients.
+- Chiffrement : données chiffrées au repos (AES-256) et en transit (TLS 1.3).
+- Contrôle d'accès : authentification forte (MFA) et gestion des rôles (RBAC).
+- Logs & audit : conservation des journaux et piste d'audit pour les opérations sensibles.
 
 Installation (Développement)
+---
 Pré-requis
-  Docker et Docker Compose
-  Un compte Snyk (pour les scans de sécurité locaux)
+- Docker et Docker Compose
+- (Optionnel) Compte Snyk pour exécuter des scans locaux
 
-Lancement rapide
-Cloner le dépôt :
-
-Bash
-git clone https://github.com/votre-repo/dentaflow.git
-cd dentaflow
-Configurer les secrets :
-
-Bash
+Configuration des secrets
+```bash
 cp .env.example .env
-# Éditez le fichier .env avec vos identifiants
-Démarrer l'infrastructure :
+# Éditez .env pour ajouter vos identifiants et variables d'environnement
+```
 
-Bash
+Lancement rapide (local)
+```bash
+# Cloner le dépôt
+git clone https://github.com/sibeldemirel/dentaFlow.git
+cd dentaFlow
+
+# Construire et démarrer les services
 docker-compose up --build
-L'API sera disponible sur http://localhost:8000 et le Frontend sur http://localhost:80.
+```
+
+Accès
+- API : http://localhost:8000
+- Frontend : http://localhost:80
+
+Exécuter les tests
+---
+Backend
+```bash
+# depuis le dossier backend/
+pytest -q
+```
+
+Frontend
+```bash
+# depuis le dossier frontend/
+pnpm install
+pnpm test
+```
 
 Pipeline CI/CD
-Le projet utilise un workflow GitHub Actions automatisé qui exécute :
+---
+Le projet utilise des workflows GitHub Actions qui exécutent :
+- Analyse de code statique (SonarCloud) pour surveiller la qualité et la dette technique.
+- Scan de vulnérabilités (Snyk) sur le code Python et sur l'image Docker.
+- Exécution des tests unitaires (Pytest & Vitest).
+- Linter / formatters (ex. black, isort, ESLint) selon configuration.
 
-L'analyse de code statique (SonarCloud) pour maintenir une dette technique faible.
-
-Le scan de vulnérabilités (Snyk) sur le code Python et l'image Docker.
-
-Les tests unitaires (Pytest & Vitest) pour garantir la non-régression.
-
-Structure du Projet
-Plaintext
+Structure du projet
+---
 dentaflow/
+```
 ├── .github/workflows/    # Pipelines CI/CD
 ├── backend/              # API FastAPI (Python)
 │   ├── app/              # Logique métier
-│   └── tests/            # Tests unitaires & intégration
+│   └── tests/            # Tests unitaires & d'intégration
 ├── frontend/             # Application Vue.js
 │   ├── src/components/3d # Visionneuse STL
 │   └── src/views/        # Pages du portail
 ├── docs/compliance/      # Registre RGPD et Analyses d'impact (PIA)
 └── docker-compose.yml    # Orchestration des services
+```
 
+Bonnes pratiques et sécurité
+---
+- Ne commitez jamais de secrets dans le dépôt : utilisez des variables d'environnement ou le secret store CI.
+- Validez les entrées utilisateurs côté backend et frontend.
+- Activez la revue obligatoire des PR pour fusion sur `develop` / `main`.
 
-🤝 Contribution
-Pour toute modification, merci de créer une branche feat/nom-feature à partir de develop et d'ouvrir une Pull Request pour revue.
+Contribuer
+---
+Merci pour votre intérêt ! Flux de contribution recommandé :
+1. Créez une branche descriptive depuis `develop` :
+   - feat/nom-feature
+   - fix/description-bug
+2. Ouvrez une Pull Request ciblant `develop`.
+3. Décrivez les changements, ajoutez des captures si nécessaire et assignez des reviewers.
+4. Passez les tests et corrigez les retours de revue avant fusion.
+
+Contact / Auteur
+---
+- Mainteneur : Sibel Demirel (ou équipe projet)
+- Repo : https://github.com/sibeldemirel/dentaFlow
+
+Licence
+---
+Ce projet est distribué sous licence MIT — voir le fichier LICENSE pour les détails.
